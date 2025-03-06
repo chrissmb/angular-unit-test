@@ -56,4 +56,10 @@ describe('MyComponentComponent', () => {
     spyOn(otherService, 'getContent').and.returnValue(otherServiceContent);
     expect(component.getOtherServiceContent()).toBe(otherServiceContent);
   });
+
+  it('should get content from MyService changing _content', () => {
+    const mockedContent = 'mocked content';
+    (component as any)._content = mockedContent;
+    expect(component.content).toEqual(mockedContent);
+  });
 });
