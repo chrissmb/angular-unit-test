@@ -31,4 +31,10 @@ export class MyComponentComponent implements OnInit {
   getOtherServiceContent(): string {
     return this._otherService.getContent();
   }
+
+  getHttpContent() {
+    return this._myService.getHttpContent().subscribe({
+        next: (response) => this._content = response
+    });
+  }
 }

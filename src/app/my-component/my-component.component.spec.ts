@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MyComponentComponent } from './my-component.component';
 import { MyServiceService } from '../service/my-service.service';
 import { SomeUtil } from '../shared/some-util';
+import { of } from 'rxjs';
 
 describe('MyComponentComponent', () => {
   let component: MyComponentComponent;
@@ -12,7 +13,7 @@ describe('MyComponentComponent', () => {
   let otherService: OtherService
 
   beforeEach(async () => {
-    const myServiceSpyObject = jasmine.createSpyObj('MyServiceService', ['getContent']);
+    const myServiceSpyObject = jasmine.createSpyObj('MyServiceService', ['getContent', 'getHttpContent']);
     // mock do getContent definido aqui antes de instanciar o componente, pois é usado no ngOnInit
     myServiceSpyObject.getContent.and.returnValue('mocked content');
 
@@ -25,7 +26,6 @@ describe('MyComponentComponent', () => {
       ]
     })
     .compileComponents();
-
 
     fixture = TestBed.createComponent(MyComponentComponent);
     component = fixture.componentInstance;
@@ -61,5 +61,17 @@ describe('MyComponentComponent', () => {
     const mockedContent = 'mocked content';
     (component as any)._content = mockedContent;
     expect(component.content).toEqual(mockedContent);
+  });
+
+  // Teste do método getHttpContent
+  it('should get content from MyService via HTTP', (done) => {
+    const httpResponse = 'HTTP response content';
+    myService.getHttpContent.and.returnValue(of(httpResponse));
+
+    component.getHttpContent();
+
+    expect(myService.getHttpContent).toHaveBeenCalled();
+    expect((component as any)._content).toBe(httpResponse);
+    done();
   });
 });

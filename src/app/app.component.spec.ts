@@ -1,10 +1,30 @@
+import { MyServiceService } from './service/my-service.service';
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { Component } from '@angular/core';
+import { MyComponentComponent } from './my-component/my-component.component';
+
+@Component({
+  selector: 'app-my-component',
+  template: '<p>Mock MyComponent works!</p>',
+  standalone: true
+})
+class MockMyComponentComponent {}
 
 describe('AppComponent', () => {
+  let myServiceService: jasmine.SpyObj<MyServiceService>;
   beforeEach(async () => {
+    const myServiceSpyObject = jasmine.createSpyObj('MyServiceService', ['getContent', 'getHttpContent']);
+
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+    }).overrideComponent(AppComponent, {
+      remove: {
+        imports: [MyComponentComponent]
+      },
+      add: {
+        imports: [MockMyComponentComponent]
+      }
     }).compileComponents();
   });
 
